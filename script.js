@@ -1,38 +1,183 @@
-//SET CONTAINER HEIGHT AND WIDTH HERE 
-const containerHeight=500;
-const containerWidth=700;
+const body = document.querySelector("body");
 
-const body=document.querySelector("body");
-const container=document.createElement("div");
-container.setAttribute("style",`height:${containerHeight}px;width:${containerWidth}px;margin:40px auto;border:2px solid black;display:flex;flex-wrap:wrap; justify-content:center`);
+//OPTION BOX
+const OptionBox = document.createElement("div");
+const canvasData = document.createElement("p");
+OptionBox.setAttribute(
+  "style",
+  `
+height:40px;
+width:600px;
+display:flex;
+justify-content:center;
+align-items:center;
+// border:2px solid black;
+margin:30px auto;
+box-sizing:border-box;
+justify-content:space-evenly`
+);
+//OPTION BOX-->#1)BUTTON SET GRAIN SIZE
+const button_set_grainNos = document.createElement("button");
+button_set_grainNos.textContent = "Set No of Grains";
+button_set_grainNos.setAttribute(
+  "style",
+  `
+height:40px;
+width:150px;
+font-family:'Courier New', Courier, monospace;
+box-sizing:border-box;
+border-radius:5px;
+border:1px solid gray;
+background-color:white;
+font-weight:bolder;
+`
+);
+OptionBox.appendChild(button_set_grainNos);
+
+//OPTION BOX-->#2)BUTTON SET CANVAS SIZE
+const button_set_canvas_size = document.createElement("button");
+button_set_canvas_size.textContent = "Set Canvas Size";
+button_set_canvas_size.setAttribute(
+  "style",
+  `
+height:40px;
+width:150px;
+font-family:'Courier New', Courier, monospace;
+box-sizing:border-box;
+border-radius:5px;
+border:1px solid gray;
+background-color:white;
+font-weight:bolder;
+`
+);
+OptionBox.appendChild(button_set_canvas_size);
+body.appendChild(OptionBox);
+
+//EVENT OPTION BOX-->#1)BUTTON SET GRAIN SIZE
+let grainSize = 0;
+button_set_grainNos.addEventListener("click", setGrainSize);
+button_set_grainNos.addEventListener(
+  "mouseover",
+  (e) => (e.target.style["background-color"] = "rgb(196, 243, 209)")
+);
+button_set_grainNos.addEventListener(
+  "mouseout",
+  (e) => (e.target.style["background-color"] = "white")
+);
+function setGrainSize(element) {
+  if (grainSize > 0) remove_no_of_Grids(grainSize);
+  grainSize = Number(prompt("Enter the grain size"));
+  create_no_of_Grids(grainSize);
+  showCanvas(container);
+}
+
+//CANVAS
+let canvasHeight = 0;
+let canvasWidth = 0;
+const container = document.createElement("div");
+function showCanvas(element) {
+  element.style["display"] = "flex";
+}
+function hideCanvas(element) {
+  element.style["display"] = "none";
+}
+//EVENT OPTION BOX-->#2)BUTTON SET CANVAS SIZE
+function setCanvas() {
+  if (confirm("Current Drawing will be lost!!! Are you sure??")) {
+    canvasHeight = Number(prompt("Enter Height of canvas!!"));
+    canvasWidth = Number(prompt("Enter Width of canvas!!"));
+    container.setAttribute(
+      "style",
+      `height:${canvasHeight}px;
+      width:${canvasWidth}px;
+      margin:40px auto;
+      border:2px solid black;
+      display:none;
+      flex-wrap:wrap;
+    justify-content:center`
+    );
+    updateCanvasData();
+  }
+}
+button_set_canvas_size.addEventListener("click", setCanvas);
+button_set_canvas_size.addEventListener(
+  "mouseover",
+  (e) => (e.target.style["background-color"] = "rgb(151, 207, 233)")
+);
+button_set_canvas_size.addEventListener(
+  "mouseout",
+  (e) => (e.target.style["background-color"] = "white")
+);
+
+//SET DEFAULT CANVAS HEIGHT AND WIDTH HERE
+if (canvasHeight === 0 || canvasWidth === 0) {
+  canvasHeight = 500;
+  canvasWidth = 700;
+}
+container.setAttribute(
+  "style",
+  `height:${canvasHeight}px;
+  width:${canvasWidth}px;
+  margin:40px auto;
+  border:2px solid black;
+  display:none;
+  flex-wrap:wrap;
+  justify-content:center`
+);
+updateCanvasData();
 body.appendChild(container);
-function create_no_of_Grids(n)
-{
-    for(let i=0;i<n;i++)
-        { 
-            const rowBlocks=document.createElement("div");
-            rowBlocks.setAttribute("style","display:flex");
-            rowBlocks.setAttribute("id",`row${i}`);
-            for(let j=0;j<n;j++)
-            {
-                console.log(`i=${i}\nj=${j}`);
-            const pixelDiv=document.createElement("div");
-            pixelDiv.setAttribute("id",`row${i}col${j}`);
-            setpixelStyle(pixelDiv,n);
-            rowBlocks.appendChild(pixelDiv);
-            pixelDiv.addEventListener("mouseover",effect);
-        }
-        container.appendChild(rowBlocks);
+
+//SHOWING CURRENT CANVAS DIMENSION
+function updateCanvasData() {
+  canvasData.setAttribute(
+    "style",
+    `
+height:40px;
+width:150px;
+font-family:'Courier New', Courier, monospace;
+box-sizing:border-box;text-align:center;font-size:13px`
+  );
+  canvasData.textContent = `Current Canvas:\n Height:${canvasHeight}\nWidth:${canvasWidth}`;
+  OptionBox.appendChild(canvasData);
 }
+
+function create_no_of_Grids(n) {
+  for (let i = 0; i < n; i++) {
+    const rowBlocks = document.createElement("div");
+    rowBlocks.setAttribute("style", "display:flex");
+    rowBlocks.setAttribute("id", `row${i}`);
+    for (let j = 0; j < n; j++) {
+      console.log(`i=${i}\nj=${j}`);
+      const pixelDiv = document.createElement("div");
+      pixelDiv.setAttribute("id", `row${i}col${j}`);
+      setpixelStyle(pixelDiv, n);
+      rowBlocks.appendChild(pixelDiv);
+      pixelDiv.addEventListener("mouseover", trailEffect);
+    }
+    container.appendChild(rowBlocks);
+  }
 }
-function setpixelStyle(elemnt,n)
-{
-    let perboxHeight=containerHeight/n;
-    let perboxWidth=containerWidth/n;
-    elemnt.setAttribute("style",`border:1px solid royalblue;height:${perboxHeight}px;width:${perboxWidth}px;box-sizing:border-box`);
+function remove_no_of_Grids(n) {
+  for (let i = 0; i < n; i++) {
+    const rowBlocks = document.querySelector(`#row${i}`);
+    for (let j = 0; j < n; j++) {
+      const pixelDiv = document.querySelector(`#row${i}col${j}`);
+      rowBlocks.removeChild(pixelDiv);
+    }
+    container.removeChild(rowBlocks);
+  }
 }
-function effect(e)
-{
-    document.getElementById(`${e.target.id}`).style["background-color"]="royalblue";
+function setpixelStyle(elemnt, n) {
+  let perboxHeight = canvasHeight / n;
+  let perboxWidth = canvasWidth / n;
+  elemnt.setAttribute(
+    "style",
+    `height:${perboxHeight}px;
+    width:${perboxWidth}px;
+    box-sizing:border-box`
+  );
 }
-create_no_of_Grids(2);
+function trailEffect(e) {
+  document.getElementById(`${e.target.id}`).style["background-color"] =
+    "royalblue";
+}
