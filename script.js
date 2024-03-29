@@ -85,7 +85,7 @@ function setGrainSize(element) {
   if (grainSize > 0) 
     remove_no_of_Grids(grainSize);
   grainSize = Number(prompt("Enter the grain size"));
-  if(grainSize<=100)
+  if(grainSize<=100 && grainSize >0)
   {
   create_no_of_Grids(grainSize);
   showCanvas(container);
