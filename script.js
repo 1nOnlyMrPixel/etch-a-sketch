@@ -1,4 +1,5 @@
 const body = document.querySelector("body");
+let randomOption=false;
 
 //OPTION BOX
 const OptionBox = document.createElement("div");
@@ -141,6 +142,11 @@ function mouseOutEffect(element,colour="white")
 {
   element.target.style["background-color"] =colour;
 }
+function randColor()
+{
+let randCol=Math.floor(Math.random()*255);
+return randCol;
+}
 
 //SET DEFAULT CANVAS HEIGHT AND WIDTH HERE
 if (canvasHeight === 0 || canvasWidth === 0) {
@@ -187,7 +193,6 @@ function create_no_of_Grids(n) {
     rowBlocks.setAttribute("style", "display:flex");
     rowBlocks.setAttribute("id", `row${i}`);
     for (let j = 0; j < n; j++) {
-      console.log(`i=${i}\nj=${j}`);
       const pixelDiv = document.createElement("div");
       pixelDiv.setAttribute("id", `row${i}col${j}`);
       setpixelStyle(pixelDiv, n);
@@ -228,6 +233,12 @@ function setpixelStyle(elemnt, n) {
   );
 }
 function trailEffect(e) {
-  document.getElementById(`${e.target.id}`).style["background-color"] =
-    "royalblue";
+  if(randomOption)
+  {
+  document.getElementById(`${e.target.id}`).style["background-color"] =`rgb(${randColor()} ${randColor()} ${randColor()})`;
+  }
+  else
+  {
+  document.getElementById(`${e.target.id}`).style["background-color"] ="royalblue";
+  }
 }
