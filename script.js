@@ -82,11 +82,20 @@ button_set_grainNos.addEventListener("click", setGrainSize);
 button_set_grainNos.addEventListener("mouseover",mouseOverEffect);
 button_set_grainNos.addEventListener("mouseout",mouseOutEffect);
 function setGrainSize(element) {
-  if (grainSize > 0) remove_no_of_Grids(grainSize);
+  if (grainSize > 0) 
+    remove_no_of_Grids(grainSize);
   grainSize = Number(prompt("Enter the grain size"));
+  if(grainSize<=100)
+  {
   create_no_of_Grids(grainSize);
   showCanvas(container);
   showClearbtn();
+  }
+  else
+  {
+    grainSize=0;
+    alert("Enter value in the range 0 to 100");
+  }
 }
 
 clearBox.addEventListener("click",()=>clearGrids(grainSize));
