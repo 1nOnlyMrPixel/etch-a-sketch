@@ -7,7 +7,7 @@ OptionBox.setAttribute(
   "style",
   `
 height:40px;
-width:600px;
+width:800px;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -53,23 +53,43 @@ font-weight:bolder;
 OptionBox.appendChild(button_set_canvas_size);
 body.appendChild(OptionBox);
 
+//OPTION BOX-->#3)CLEAR BUTTON
+const clearBox = document.createElement("button");
+clearBox.textContent="Clear";
+clearBox.setAttribute("style",`
+height:40px;
+width:150px;
+font-family:'Courier New', Courier, monospace;
+box-sizing:border-box;
+border-radius:5px;
+border:1px solid gray;
+background-color:white;
+font-weight:bolder;
+display:none;
+`)
+OptionBox.appendChild(clearBox);
+function showClearbtn()
+{
+  clearBox.style["display"]="inline";
+}
+clearBox.addEventListener("mouseover",mouseOverEffect);
+clearBox.addEventListener("mouseout",mouseOutEffect);
+
+
 //EVENT OPTION BOX-->#1)BUTTON SET GRAIN SIZE
 let grainSize = 0;
 button_set_grainNos.addEventListener("click", setGrainSize);
-button_set_grainNos.addEventListener(
-  "mouseover",
-  (e) => (e.target.style["background-color"] = "rgb(196, 243, 209)")
-);
-button_set_grainNos.addEventListener(
-  "mouseout",
-  (e) => (e.target.style["background-color"] = "white")
-);
+button_set_grainNos.addEventListener("mouseover",mouseOverEffect);
+button_set_grainNos.addEventListener("mouseout",mouseOutEffect);
 function setGrainSize(element) {
   if (grainSize > 0) remove_no_of_Grids(grainSize);
   grainSize = Number(prompt("Enter the grain size"));
   create_no_of_Grids(grainSize);
   showCanvas(container);
+  showClearbtn();
 }
+
+clearBox.addEventListener("click",()=>clearGrids(grainSize));
 
 //CANVAS
 let canvasHeight = 0;
@@ -100,14 +120,18 @@ function setCanvas() {
   }
 }
 button_set_canvas_size.addEventListener("click", setCanvas);
-button_set_canvas_size.addEventListener(
-  "mouseover",
-  (e) => (e.target.style["background-color"] = "rgb(151, 207, 233)")
-);
-button_set_canvas_size.addEventListener(
-  "mouseout",
-  (e) => (e.target.style["background-color"] = "white")
-);
+button_set_canvas_size.addEventListener("mouseover",mouseOverEffect);
+button_set_canvas_size.addEventListener("mouseout",mouseOutEffect);
+
+
+function mouseOverEffect(element,colour="rgb(196, 243, 209)")
+{
+  element.target.style["background-color"] = colour;
+}
+function mouseOutEffect(element,colour="white")
+{
+  element.target.style["background-color"] =colour;
+}
 
 //SET DEFAULT CANVAS HEIGHT AND WIDTH HERE
 if (canvasHeight === 0 || canvasWidth === 0) {
@@ -126,6 +150,13 @@ container.setAttribute(
 );
 updateCanvasData();
 body.appendChild(container);
+
+
+
+
+
+
+
 
 //SHOWING CURRENT CANVAS DIMENSION
 function updateCanvasData() {
@@ -165,6 +196,16 @@ function remove_no_of_Grids(n) {
       rowBlocks.removeChild(pixelDiv);
     }
     container.removeChild(rowBlocks);
+  }
+}
+function clearGrids(n) {
+  for (let i = 0; i < n; i++) {
+    const rowBlocks = document.querySelector(`#row${i}`);
+    for (let j = 0; j < n; j++) {
+      const pixelDiv = document.querySelector(`#row${i}col${j}`);
+      pixelDiv.style["background-color"]="white";
+    }
+    rowBlocks.style["background-color"]="white";
   }
 }
 function setpixelStyle(elemnt, n) {
