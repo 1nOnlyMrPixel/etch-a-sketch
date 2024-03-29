@@ -17,10 +17,10 @@ margin:30px auto;
 box-sizing:border-box;
 justify-content:space-evenly`
 );
-//OPTION BOX-->#1)BUTTON SET GRAIN SIZE
-const button_set_grainNos = document.createElement("button");
-button_set_grainNos.textContent = "Set No of Grains";
-button_set_grainNos.setAttribute(
+//OPTION BOX-->#1)BUTTON SET PIXEL SIZE
+const button_set_pixelSize = document.createElement("button");
+button_set_pixelSize.textContent = "Set Pixel Size";
+button_set_pixelSize.setAttribute(
   "style",
   `
 height:40px;
@@ -33,7 +33,7 @@ background-color:white;
 font-weight:bolder;
 `
 );
-OptionBox.appendChild(button_set_grainNos);
+OptionBox.appendChild(button_set_pixelSize);
 
 //OPTION BOX-->#2)BUTTON SET CANVAS SIZE
 const button_set_canvas_size = document.createElement("button");
@@ -77,29 +77,29 @@ clearBox.addEventListener("mouseover",mouseOverEffect);
 clearBox.addEventListener("mouseout",mouseOutEffect);
 
 
-//EVENT OPTION BOX-->#1)BUTTON SET GRAIN SIZE
-let grainSize = 0;
-button_set_grainNos.addEventListener("click", setGrainSize);
-button_set_grainNos.addEventListener("mouseover",mouseOverEffect);
-button_set_grainNos.addEventListener("mouseout",mouseOutEffect);
-function setGrainSize(element) {
-  if (grainSize > 0) 
-    remove_no_of_Grids(grainSize);
-  grainSize = Number(prompt("Enter the grain size"));
-  if(grainSize<=100 && grainSize >0)
+//EVENT OPTION BOX-->#1)BUTTON SET PIXEL SIZE
+let pixelSize = 0;
+button_set_pixelSize.addEventListener("click", setPixelSize);
+button_set_pixelSize.addEventListener("mouseover",mouseOverEffect);
+button_set_pixelSize.addEventListener("mouseout",mouseOutEffect);
+function setPixelSize(element) {
+  if (pixelSize > 0) 
+    remove_no_of_Grids(pixelSize);
+  pixelSize = Number(prompt("Enter the grain size"));
+  if(pixelSize<=100 && pixelSize >0)
   {
-  create_no_of_Grids(grainSize);
+  create_no_of_Grids(pixelSize);
   showCanvas(container);
   showClearbtn();
   }
   else
   {
-    grainSize=0;
+    pixelSize=0;
     alert("Enter value in the range 0 to 100");
   }
 }
 
-clearBox.addEventListener("click",()=>clearGrids(grainSize));
+clearBox.addEventListener("click",()=>clearGrids(pixelSize));
 
 //CANVAS
 let canvasHeight = 0;
@@ -218,6 +218,7 @@ function clearGrids(n) {
     for (let j = 0; j < n; j++) {
       const pixelDiv = document.querySelector(`#row${i}col${j}`);
       pixelDiv.style["background-color"]="white";
+      pixelDiv.style["opacity"]="0";
     }
     rowBlocks.style["background-color"]="white";
   }
@@ -225,20 +226,28 @@ function clearGrids(n) {
 function setpixelStyle(elemnt, n) {
   let perboxHeight = canvasHeight / n;
   let perboxWidth = canvasWidth / n;
-  elemnt.setAttribute(
-    "style",
-    `height:${perboxHeight}px;
+  elemnt.setAttribute("style",`
+    height:${perboxHeight}px;
     width:${perboxWidth}px;
-    box-sizing:border-box`
+    box-sizing:border-box;
+    opacity:0%;
+    background-color:white`
   );
 }
 function trailEffect(e) {
-  if(randomOption)
+  let opacity=Number(document.getElementById(e.target.id).style.opacity);
+  if(opacity<1.0 && opacity>=0.0)
+    opacity=+opacity+0.1;
+if(randomOption)
   {
+    if(document.getElementById(e.target.id).style["backgroundColor"]==="white"){
   document.getElementById(`${e.target.id}`).style["background-color"] =`rgb(${randColor()} ${randColor()} ${randColor()})`;
-  }
-  else
-  {
+    }
+  document.getElementById(`${e.target.id}`).style["opacity"] =`${opacity}`;
+}
+else
+{
+  document.getElementById(`${e.target.id}`).style["opacity"] =`${opacity}`;
   document.getElementById(`${e.target.id}`).style["background-color"] ="royalblue";
   }
 }

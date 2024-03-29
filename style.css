@@ -5,6 +5,7 @@
 nav
 {
     height: 80px;
+    width: 100vw;
     color: white;
     font-family: 'Courier New', Courier, monospace;
     font-size: 25px;
