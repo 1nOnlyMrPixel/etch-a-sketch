@@ -1,196 +1,364 @@
-const body = document.querySelector("body");
-let randomOption=false;
-
-//OPTION BOX
-const OptionBox = document.createElement("div");
-const canvasData = document.createElement("p");
-OptionBox.setAttribute(
+const main = document.querySelector("main");
+const containerArea = document.createElement("div");
+containerArea.setAttribute("id", "containerArea");
+const optionArea = document.createElement("div");
+optionArea.setAttribute("id", "optionArea");
+const canvasArea = document.createElement("div");
+canvasArea.setAttribute("id", "canvasArea");
+const optionBox = document.createElement("div");
+optionBox.setAttribute("id", "optionBox");
+const canvas = document.createElement("div");
+canvas.setAttribute("id", "canvas");
+const inpCol = document.createElement("input");
+let inputColor = "";
+inpCol.setAttribute("type", "color");
+inpCol.setAttribute("id", "chooseColor");
+inpCol.setAttribute(
   "style",
   `
-height:40px;
-width:800px;
+display:none;
+height:20px;
+width:20px;`
+);
+inpCol.addEventListener("click", updateUserColor);
+
+function updateUserColor() {
+  inputColor = document.getElementById("chooseColor").value;
+  userColorPen = true;
+  updateToggleButtonData();
+}
+
+//SETTING UP MAIN DIV STYLING
+main.setAttribute("style", `margin:10px 0;`);
+
+//SETTING UP CONTAINER AREA STYLING
+
+containerArea.setAttribute(
+  "style",
+  `
+height:600px;
+display:flex;
+// border:2px solid royalblue`
+);
+main.appendChild(containerArea);
+
+//SETTING UP OPTION AREA STYLING
+
+optionArea.setAttribute(
+  "style",
+  `
+width:300px;
 display:flex;
 justify-content:center;
 align-items:center;
-// border:2px solid black;
-margin:30px auto;
-box-sizing:border-box;
-justify-content:space-evenly`
+// border:2px solid crimson`
 );
-//OPTION BOX-->#1)BUTTON SET PIXEL SIZE
-const button_set_pixelSize = document.createElement("button");
-button_set_pixelSize.textContent = "Set Pixel Size";
-button_set_pixelSize.setAttribute(
+containerArea.appendChild(optionArea);
+
+//SETTING UP CANVAS AREA STYLING
+
+canvasArea.setAttribute(
   "style",
   `
-height:40px;
-width:150px;
-font-family:'Courier New', Courier, monospace;
+height:600px;
+width:80%;
+display:flex;
+justify-content:center;
+align-items:center;
 box-sizing:border-box;
-border-radius:5px;
-border:1px solid gray;
-background-color:white;
-font-weight:bolder;
-`
+// border:2px solid red`
 );
-OptionBox.appendChild(button_set_pixelSize);
+containerArea.appendChild(canvasArea);
 
-//OPTION BOX-->#2)BUTTON SET CANVAS SIZE
-const button_set_canvas_size = document.createElement("button");
-button_set_canvas_size.textContent = "Set Canvas Size";
-button_set_canvas_size.setAttribute(
+//SETTING UP OPTION BOX STYLING
+
+optionBox.setAttribute(
   "style",
   `
-height:40px;
-width:150px;
-font-family:'Courier New', Courier, monospace;
-box-sizing:border-box;
-border-radius:5px;
-border:1px solid gray;
-background-color:white;
-font-weight:bolder;
-`
+height:400px;
+width:250px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+justify-content:space-evenly;
+align-items:center;
+// border:5px solid blue`
 );
-OptionBox.appendChild(button_set_canvas_size);
-body.appendChild(OptionBox);
+optionArea.appendChild(optionBox);
 
-//OPTION BOX-->#3)CLEAR BUTTON
-const clearBox = document.createElement("button");
-clearBox.textContent="Clear";
-clearBox.setAttribute("style",`
-height:40px;
-width:150px;
-font-family:'Courier New', Courier, monospace;
-box-sizing:border-box;
-border-radius:5px;
-border:1px solid gray;
+//SETTING UP CANVA STYLING
+let defaultcanvasHeight = 550;
+let defaultcanvasWidth = 700;
+canvas.setAttribute(
+  "style",
+  `
+height:${defaultcanvasHeight}px;
+width:${defaultcanvasWidth}px;
+display:flex;
+flex-wrap:wrap;
 background-color:white;
-font-weight:bolder;
-display:none;
-`)
-OptionBox.appendChild(clearBox);
-function showClearbtn()
-{
-  clearBox.style["display"]="inline";
-}
-clearBox.addEventListener("mouseover",mouseOverEffect);
-clearBox.addEventListener("mouseout",mouseOutEffect);
+border:2px solid black;`
+);
+canvasArea.appendChild(canvas);
 
+//SETTING UP BUTTONS IN OPTION BOX
 
-//EVENT OPTION BOX-->#1)BUTTON SET PIXEL SIZE
-let pixelSize = 0;
-button_set_pixelSize.addEventListener("click", setPixelSize);
-button_set_pixelSize.addEventListener("mouseover",mouseOverEffect);
-button_set_pixelSize.addEventListener("mouseout",mouseOutEffect);
-function setPixelSize(element) {
-  if (pixelSize > 0) 
-    remove_no_of_Grids(pixelSize);
-  pixelSize = Number(prompt("Enter the grain size"));
-  if(pixelSize<=100 && pixelSize >0)
-  {
-  create_no_of_Grids(pixelSize);
-  showCanvas(container);
-  showClearbtn();
+//PIXEL SIZE BTN
+const btnSetPixelSize = document.createElement("button");
+btnSetPixelSize.setAttribute("id", "btnSetPixelSize");
+btnSetPixelSize.textContent = "Set Pixel Size";
+
+//COLOR GRAY BTN
+
+const btnSetPenColorGray = document.createElement("button");
+btnSetPenColorGray.setAttribute("id", "btnSetPenColorGray");
+btnSetPenColorGray.textContent = "Color:Gray";
+
+const grayPenToggleValue = document.createElement("span");
+grayPenToggleValue.setAttribute("id", "grayPenToggleValue");
+grayPenToggleValue.textContent = "[off]";
+
+btnSetPenColorGray.appendChild(grayPenToggleValue);
+
+//COLOR RANDOM BTN
+
+const btnSetPenColorRandom = document.createElement("button");
+btnSetPenColorRandom.setAttribute("id", "btnSetPenColorRandom");
+btnSetPenColorRandom.textContent = "Color:Random";
+
+const randomPenToggleValue = document.createElement("span");
+randomPenToggleValue.setAttribute("id", "randomPenToggleValue");
+randomPenToggleValue.textContent = "[off]";
+
+btnSetPenColorRandom.appendChild(randomPenToggleValue);
+
+//COLOR USER INPUT BTN
+
+const btnSetPenColorUser = document.createElement("button");
+btnSetPenColorUser.setAttribute("id", "btnSetPenColorUser");
+btnSetPenColorUser.textContent = "Select Color";
+
+//INTENSITY BTN
+
+const btnSetPenIntensity = document.createElement("button");
+btnSetPenIntensity.setAttribute("id", "btnSetPenIntensity");
+btnSetPenIntensity.textContent = "Intensity Mode:";
+
+const intensityToggleValue = document.createElement("span");
+intensityToggleValue.setAttribute("id", "intensityToggleValue");
+intensityToggleValue.textContent = "[off]";
+
+btnSetPenIntensity.appendChild(intensityToggleValue);
+
+//CLEAR BTN
+
+const btnClearCanvas = document.createElement("button");
+btnClearCanvas.setAttribute("id", "btnClearCanvas");
+btnClearCanvas.textContent = "Clear";
+
+const arr = [
+  btnSetPixelSize,
+  btnSetPenColorGray,
+  btnSetPenColorRandom,
+  btnSetPenColorUser,
+  btnSetPenIntensity,
+  btnClearCanvas,
+];
+
+//ADDING CLICK,COLOUR,TOGGLE EVENTS TO BUTTONS
+for (let i = 0; i < arr.length; i++) {
+  optionBox.appendChild(arr[i]);
+  setButtonStyle(arr[i]);
+  arr[i].addEventListener("mouseover", btnHoverIn);
+  arr[i].addEventListener("mouseout", btnHoverOut);
+  if (i == 0) {
+    arr[i].addEventListener("click", setPixelSize);
   }
-  else
-  {
-    pixelSize=0;
+  if (i == 1 || i == 2 || i == 4) {
+    updateButtonColor(arr[i]);
+    arr[i].addEventListener("click", () => {
+      updateToggle(arr[i]);
+    });
+  }
+  if (i == 3) {
+    //SELECT USER INPUT COLOR
+    arr[i].addEventListener("click", () => {
+      if (userColorPen === false) {
+        userColorPen = true;
+        randomColorPen = false;
+        grayColorPen = false;
+        console.log("clicked button");
+        inpCol.style["display"] = "inline";
+        btnSetPenColorUser.appendChild(inpCol);
+      }
+      updateToggleButtonData();
+    });
+  }
+  if (i == 5) {
+    arr[i].addEventListener("click", () => clearGrids(pixelSize));
+  }
+}
+//STYLE FUNCTION FOR OPTION BUTTONS
+
+function setButtonStyle(element) {
+  let requiredElement = element.id;
+  document.querySelector(`#${requiredElement}`).setAttribute(
+    "style",
+    `
+    height:50px;
+    width:250px;
+    font-family:'Courier New', Courier, monospace;
+    font-weight: bolder;
+    font-size: 15px;
+    text-align:center;
+    background-color:white;
+    border:1px solid #BF9CFF;
+    display:flex;
+    justify-content:space-evenly;
+    align-items:center;
+    border-radius:20px`
+  );
+}
+
+//HOVERING EFFECT ON THE BUTTON
+function btnHoverIn(element) {
+  let requiredElementId = element.target.id;
+  if (requiredElementId != "") {
+    let Tag = document.querySelector(`#${requiredElementId}`).tagName;
+    if (!(Tag === "SPAN")) {
+      document.querySelector(`#${requiredElementId}`).style[
+        "background-color"
+      ] = "#BF9CFF";
+      document.querySelector(`#${requiredElementId}`).style["border"] = "none";
+    }
+  }
+}
+function btnHoverOut(element) {
+  let requiredElementId = element.target.id;
+  if (requiredElementId != "") {
+    let Tag = document.querySelector(`#${requiredElementId}`).tagName;
+    if (!(Tag === "SPAN")) {
+      document.querySelector(`#${requiredElementId}`).style[
+        "background-color"
+      ] = "white";
+      document.querySelector(`#${requiredElementId}`).style["border"] =
+        "1px solid #BF9CFF";
+    }
+  }
+}
+
+//TOGGLING EFFECT OF BUTTONS
+let grayColorPen = true;
+let randomColorPen = false;
+let intensityMode = false;
+let userColorPen = false;
+
+updateToggleButtonData();
+
+//FUNCTION TO UPDATE TOGGLE VALUES
+
+function updateToggle(element) {
+  let elementName = document.querySelector(`#${element.id}`).children[0]
+    .tagName;
+  console.log(element);
+  if (elementName === "SPAN") {
+    let spanId = document.querySelector(`#${element.id}`).children[0].id;
+    let requiredElementValue = document.querySelector(`#${spanId}`);
+    switch (spanId) {
+      case "grayPenToggleValue":
+        if (grayColorPen === false) {
+          grayColorPen = true;
+          randomColorPen = false;
+          userColorPen = false;
+        } else {
+          grayColorPen = false;
+        }
+        break;
+      case "randomPenToggleValue":
+        if (randomColorPen === false) {
+          randomColorPen = true;
+          grayColorPen = false;
+          userColorPen = false;
+        } else {
+          randomColorPen = false;
+        }
+        break;
+      case "intensityToggleValue":
+        if (intensityMode === false) {
+          intensityMode = true;
+        } else {
+          intensityMode = false;
+        }
+        break;
+    }
+    updateToggleButtonData();
+  }
+}
+
+//FUNCTION TO UPDATE TOGGLE VALUES ON BUTTONS
+function updateToggleButtonData() {
+  let gray = document.querySelector(`#grayPenToggleValue`);
+  let randomCol = document.querySelector(`#randomPenToggleValue`);
+  let intenseValue = document.querySelector(`#intensityToggleValue`);
+  gray.style["color"] = "red";
+  randomCol.style["color"] = "red";
+  intenseValue.style["color"] = "red";
+  if (grayColorPen === false) {
+    gray.textContent = "[off]";
+  }
+  if (grayColorPen === true) {
+    gray.textContent = "[on]";
+    gray.style["color"] = "green";
+    randomCol.textContent = "[off]";
+    inpCol.style["display"] = "none";
+  }
+  if (randomColorPen === false) {
+    randomCol.textContent = "[off]";
+  }
+  if (randomColorPen === true) {
+    randomCol.textContent = "[on]";
+    randomCol.style["color"] = "green";
+    gray.textContent = "[off]";
+    inpCol.style["display"] = "none";
+  }
+  if (intensityMode === false) {
+    intenseValue.textContent = "[off]";
+  }
+  if (intensityMode === true) {
+    intenseValue.textContent = "[on]";
+    intenseValue.style["color"] = "green";
+  }
+  if (userColorPen === true) {
+    randomCol.textContent = "[off]";
+    gray.textContent = "[off]";
+    inpCol.style["display"] = "inline";
+  }
+}
+
+//FUNCTION TO UPDATE TOGGLE BUTTON COLOR
+
+function updateButtonColor(element) {
+  let tar = document.getElementById(element.children[0].id);
+  tar.style["color"] = "red";
+}
+
+let pixelSize = 0;
+function setPixelSize(element) {
+  if (pixelSize > 0) remove_no_of_Grids(pixelSize);
+  pixelSize = Number(prompt("Enter the grain size"));
+  if (pixelSize <= 100 && pixelSize > 0) {
+    create_no_of_Grids(pixelSize);
+    // showClearbtn();
+  } else {
+    pixelSize = 0;
     alert("Enter value in the range 0 to 100");
   }
 }
-
-clearBox.addEventListener("click",()=>clearGrids(pixelSize));
-
-//CANVAS
-let canvasHeight = 0;
-let canvasWidth = 0;
-const container = document.createElement("div");
-function showCanvas(element) {
-  element.style["display"] = "flex";
-}
-function hideCanvas(element) {
-  element.style["display"] = "none";
-}
-//EVENT OPTION BOX-->#2)BUTTON SET CANVAS SIZE
-function setCanvas() {
-  if (confirm("Current Drawing will be lost!!! Are you sure??")) {
-    canvasHeight = Number(prompt("Enter Height of canvas!!"));
-    canvasWidth = Number(prompt("Enter Width of canvas!!"));
-    container.setAttribute(
-      "style",
-      `height:${canvasHeight}px;
-      width:${canvasWidth}px;
-      margin:40px auto;
-      border:2px solid black;
-      display:none;
-      flex-wrap:wrap;
-    justify-content:center`
-    );
-    updateCanvasData();
-  }
-}
-button_set_canvas_size.addEventListener("click", setCanvas);
-button_set_canvas_size.addEventListener("mouseover",mouseOverEffect);
-button_set_canvas_size.addEventListener("mouseout",mouseOutEffect);
-
-
-function mouseOverEffect(element,colour="rgb(196, 243, 209)")
-{
-  element.target.style["background-color"] = colour;
-}
-function mouseOutEffect(element,colour="white")
-{
-  element.target.style["background-color"] =colour;
-}
-function randColor()
-{
-let randCol=Math.floor(Math.random()*255);
-return randCol;
-}
-
-//SET DEFAULT CANVAS HEIGHT AND WIDTH HERE
-if (canvasHeight === 0 || canvasWidth === 0) {
-  canvasHeight = 500;
-  canvasWidth = 700;
-}
-container.setAttribute(
-  "style",
-  `height:${canvasHeight}px;
-  width:${canvasWidth}px;
-  margin:40px auto;
-  border:2px solid black;
-  display:none;
-  flex-wrap:wrap;
-  justify-content:center`
-);
-updateCanvasData();
-body.appendChild(container);
-
-
-
-
-
-
-
-
-//SHOWING CURRENT CANVAS DIMENSION
-function updateCanvasData() {
-  canvasData.setAttribute(
-    "style",
-    `
-height:40px;
-width:150px;
-font-family:'Courier New', Courier, monospace;
-box-sizing:border-box;text-align:center;font-size:13px`
-  );
-  canvasData.textContent = `Current Canvas:\n Height:${canvasHeight}\nWidth:${canvasWidth}`;
-  OptionBox.appendChild(canvasData);
-}
-
 function create_no_of_Grids(n) {
+  pixelSize = n;
   for (let i = 0; i < n; i++) {
     const rowBlocks = document.createElement("div");
-    rowBlocks.setAttribute("style", "display:flex");
+    rowBlocks.setAttribute("style", "display:flex;box-sizing:border-box");
     rowBlocks.setAttribute("id", `row${i}`);
     for (let j = 0; j < n; j++) {
       const pixelDiv = document.createElement("div");
@@ -199,9 +367,10 @@ function create_no_of_Grids(n) {
       rowBlocks.appendChild(pixelDiv);
       pixelDiv.addEventListener("mouseover", trailEffect);
     }
-    container.appendChild(rowBlocks);
+    canvas.appendChild(rowBlocks);
   }
 }
+
 function remove_no_of_Grids(n) {
   for (let i = 0; i < n; i++) {
     const rowBlocks = document.querySelector(`#row${i}`);
@@ -209,45 +378,76 @@ function remove_no_of_Grids(n) {
       const pixelDiv = document.querySelector(`#row${i}col${j}`);
       rowBlocks.removeChild(pixelDiv);
     }
-    container.removeChild(rowBlocks);
+    canvas.removeChild(rowBlocks);
   }
 }
+
+function setpixelStyle(elemnt, n) {
+  let perboxHeight = defaultcanvasHeight / n;
+  let perboxWidth = defaultcanvasWidth / n;
+  elemnt.setAttribute(
+    "style",
+    `
+    height:${perboxHeight}px;
+    width:${perboxWidth}px;
+    opacity:100%;
+    // border:1px solid gray;
+    background-color:white;
+    box-sizing:border-box;`
+  );
+}
+
+function trailEffect(e) {
+  let opacity = Number(document.getElementById(e.target.id).style.opacity);
+  if (opacity < 1.0 && opacity >= 0.0 && intensityMode === true)
+    opacity = +opacity + 0.1;
+  else opacity = 1;
+  if (randomColorPen) {
+    if (
+      document.getElementById(e.target.id).style["backgroundColor"] ===
+        "white" ||
+      document.getElementById(e.target.id).style["backgroundColor"] === "black"
+    ) {
+      document.getElementById(`${e.target.id}`).style[
+        "background-color"
+      ] = `rgb(${randColor()} ${randColor()} ${randColor()})`;
+    }
+    document.getElementById(`${e.target.id}`).style["opacity"] = `${opacity}`;
+  }
+  if (grayColorPen) {
+    document.getElementById(`${e.target.id}`).style["opacity"] = `${opacity}`;
+    document.getElementById(`${e.target.id}`).style["background-color"] =
+      "black";
+  }
+  if (userColorPen) {
+    updateUserColor();
+    document.getElementById(`${e.target.id}`).style["opacity"] = `${opacity}`;
+    console.log(inputColor);
+    document.getElementById(`${e.target.id}`).style[
+      "background-color"
+    ] = `${inputColor}`;
+  }
+}
+function randColor() {
+  let randCol = Math.floor(Math.random() * 255);
+  return randCol;
+}
+
 function clearGrids(n) {
+  grayColorPen = true;
+  randomColorPen = false;
+  intensityMode = false;
+  userColorPen = false;
+  updateToggleButtonData();
+
   for (let i = 0; i < n; i++) {
     const rowBlocks = document.querySelector(`#row${i}`);
     for (let j = 0; j < n; j++) {
       const pixelDiv = document.querySelector(`#row${i}col${j}`);
-      pixelDiv.style["background-color"]="white";
-      pixelDiv.style["opacity"]="0";
+      pixelDiv.style["background-color"] = "white";
+      pixelDiv.style["opacity"] = "0";
     }
-    rowBlocks.style["background-color"]="white";
+    rowBlocks.style["background-color"] = "white";
   }
 }
-function setpixelStyle(elemnt, n) {
-  let perboxHeight = canvasHeight / n;
-  let perboxWidth = canvasWidth / n;
-  elemnt.setAttribute("style",`
-    height:${perboxHeight}px;
-    width:${perboxWidth}px;
-    box-sizing:border-box;
-    opacity:0%;
-    background-color:white`
-  );
-}
-function trailEffect(e) {
-  let opacity=Number(document.getElementById(e.target.id).style.opacity);
-  if(opacity<1.0 && opacity>=0.0)
-    opacity=+opacity+0.1;
-if(randomOption)
-  {
-    if(document.getElementById(e.target.id).style["backgroundColor"]==="white"){
-  document.getElementById(`${e.target.id}`).style["background-color"] =`rgb(${randColor()} ${randColor()} ${randColor()})`;
-    }
-  document.getElementById(`${e.target.id}`).style["opacity"] =`${opacity}`;
-}
-else
-{
-  document.getElementById(`${e.target.id}`).style["opacity"] =`${opacity}`;
-  document.getElementById(`${e.target.id}`).style["background-color"] ="royalblue";
-  }
-}
+create_no_of_Grids(3);
